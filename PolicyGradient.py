@@ -1,4 +1,4 @@
-from models import PolicyNetwork, ValueNetwork
+from models import BatchNormValueNetwork, PolicyNetwork
 from torch.distributions import Categorical
 from typing import Tuple
 from torch import optim
@@ -26,7 +26,7 @@ class Agent:
         self.policy_network = PolicyNetwork(input_size, output_size)
         self.policy_optimizer = optim.RMSprop(self.policy_network.parameters(),
                                               policy_lr)
-        self.value_network = ValueNetwork(input_size)
+        self.value_network = BatchNormValueNetwork(input_size)
         self.value_optimizer = optim.RMSprop(self.value_network.parameters(),
                                              value_lr)
         self.gamma = gamma
@@ -105,8 +105,8 @@ class Agent:
             self.state_memory_batch, self.log_prob_memory_batch,
             self.return_memory_batch, self.entropy_memory_batch):
             T = len(state_memory)
-            state_values = self.value_network.forward(torch.concat(state_memory)
-                                                      ).view(T)
+            state_values = self.value_network(torch.concat(state_memory)).view(
+                T)
             for return_, state_value, log_prob, entropy in zip(
                 return_memory, state_values, log_prob_memory, entropy_memory):
                 policy_loss -= (log_prob * (return_ - state_value).detach() +

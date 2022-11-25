@@ -33,23 +33,6 @@ class ValueNetwork(nn.Module):
         return self.layers(x)
 
 
-class BatchNormPolicyNetwork(nn.Module):
-    def __init__(self, input_size: int, output_size: int) -> None:
-        super(BatchNormPolicyNetwork, self).__init__()
-        self.layers = nn.Sequential(
-            nn.Linear(input_size, 128),
-            nn.BatchNorm1d(128),
-            nn.ReLU(),
-            nn.Linear(128, 128),
-            nn.BatchNorm1d(128),
-            nn.ReLU(),
-            nn.Linear(128, output_size)
-        )
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.layers(x)
-
-
 class BatchNormValueNetwork(nn.Module):
     def __init__(self, input_size: int) -> None:
         super(BatchNormValueNetwork, self).__init__()
@@ -63,3 +46,5 @@ class BatchNormValueNetwork(nn.Module):
             nn.Linear(128, 1)
         )
 
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.layers(x)
