@@ -51,7 +51,7 @@ class Agent:
 
         if is_train:
             action_dist = Categorical(action_probs)
-            action = int(action_dist.sample().item())
+            action = action_dist.sample().item()
             if not env.is_valid_action(action, player):
                 _, indices = torch.sort(action_probs.detach(), descending=True)
                 for index in indices:
@@ -64,7 +64,7 @@ class Agent:
             self.action_memory.append(action)
             self.state_value_memory.append(state_value.item())
             self.action_log_prob_memory.append(action_log_prob)
-            return action
+            return int(action)
         else:
             _, indices = torch.sort(action_probs.detach(), descending=True)
             for index in indices:
