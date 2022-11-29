@@ -59,7 +59,7 @@ class Agent:
                         action = index.item()
                         break
 
-            action_log_prob = action_dist.log_prob(action).item()
+            action_log_prob = action_dist.log_prob(torch.as_tensor(action)).item()
             self.state_memory.append(state.unsqueeze(dim=0))
             self.action_memory.append(action)
             self.state_value_memory.append(state_value.item())
