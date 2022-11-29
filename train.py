@@ -4,7 +4,7 @@ import torch
 
 
 if __name__ == "__main__":
-    env = Congkak()
+    env = Congkak(False)
     agent1 = Agent(
         input_size=16,
         output_size=7,
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     agent2.network.train()
 
     for e in range(1000000000):
-        state = env.reset()
+        state = env.reset(False)
         done = False
         info = 0
         score_1 = 0.
@@ -67,7 +67,5 @@ if __name__ == "__main__":
                   f"{value_loss_1:.6f} | Player 2, Policy Loss: "
                   f"{policy_loss_2:.6f}, Value Loss: {value_loss_2:.6f}")
         if (e + 1) % 500 == 0:
-            torch.save(agent1.network.state_dict(),
-                       "Agent1_Congkak_PolicyGradient.pt")
-            torch.save(agent2.network.state_dict(),
-                       "Agent2_Congkak_PolicyGradient.pt")
+            torch.save(agent1.network.state_dict(), "Agent1_Congkak_PPO.pt")
+            torch.save(agent2.network.state_dict(), "Agent2_Congkak_PPO.pt")

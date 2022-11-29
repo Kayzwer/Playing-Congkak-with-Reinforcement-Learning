@@ -1,11 +1,14 @@
 from typing import Tuple
 import numpy as np
+import time
+import os
 
 
 class Congkak:
-    def __init__(self) -> None:
+    def __init__(self, display: bool) -> None:
         self.board = np.full(16, 7, np.int8)
         self.board[0], self.board[8] = 0, 0
+        self.display = display
 
     def two_agent_step(self, n: int, m: int) -> Tuple[np.ndarray, float, float,
                                                       bool, int]:
@@ -56,6 +59,11 @@ class Congkak:
                         else:
                             balls2 += self.board[m]
                             self.board[m] = 0
+                if self.display:
+                    os.system("clear")
+                    print(f"Player 1 balls: {balls1} Player 2 balls: {balls2}")
+                    print(self)
+                    time.sleep(0.2)
 
         reward1 = self.board[0] - score1
         reward2 = self.board[8] - score2
@@ -102,6 +110,11 @@ class Congkak:
                 balls -= 1
                 if balls == 0 and (self.board[n] == 1 or n == player_home):
                     end = True
+                if self.display:
+                    os.system("clear")
+                    print(f"Player {player} balls: {balls}")
+                    print(self)
+                    time.sleep(0.2)
 
         if can_eat and (((1 <= n <= 7) and player == 2) or ((9 <= n <= 15) and
                                                             player == 1)):
@@ -109,6 +122,10 @@ class Congkak:
             self.board[player_home] += self.board[target_entry] + 1
             self.board[target_entry] = 0
             self.board[n] = 0
+            if self.display:
+                os.system("clear")
+                print(self)
+                time.sleep(0.2)
 
         reward = self.board[player_home] - score
         info = player if n == player_home else enemy
@@ -119,8 +136,8 @@ class Congkak:
     def get_done(self) -> bool:
         return not (self.have_valid_action(1) and self.have_valid_action(2))
 
-    def reset(self = None) -> np.ndarray:
-        self.__init__()
+    def reset(self, display: bool) -> np.ndarray:
+        self.__init__(display)
         return self.board.copy().astype(np.float32)
 
     def sample_valid_action(self, player: int) -> int:
@@ -155,8 +172,8 @@ class Congkak:
     def offset_action(n: int, player: int) -> int:
         return n + 9 if player == 1 else n + 1
 
-    def __str__(self = None) -> str:
-        output = f"Player 1 Home: {self.board[0]}\nPlayer 2 Home: {self.board[8]}"
+    def __str__(self) -> str:
+        output = f"Player 1 Home: {self.board[0]} Player 2 Home: {self.board[8]}"
         output += '\n'
         for i in range(1, 8):
             output += f"{self.board[i]} "
