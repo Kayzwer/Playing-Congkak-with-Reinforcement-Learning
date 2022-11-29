@@ -130,7 +130,7 @@ class Agent:
         for i in range(T - 1, -1, -1):
             returns_sum = self.reward_memory[i] + self.gamma * returns_sum
             returns[i] = returns_sum
-        return returns
+        return (returns - returns.mean()) / returns.std()
 
     def get_gaes(self, reward_memory: List[float],
                  state_value_memory: List[float]) -> np.ndarray:

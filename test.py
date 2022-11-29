@@ -17,7 +17,7 @@ if __name__ == "__main__":
         entropy_weight=0.1,
         max_policy_train_iters=128,
         value_train_iters=128)
-    agent2.network.load_state_dict(torch.load("Agent2_Congkak_PolicyGradient.pt"))
+    agent2.network.load_state_dict(torch.load("Agent2_Congkak_PPO.pt"))
     agent2.network.eval()
 
     state = env.reset(True)
