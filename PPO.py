@@ -49,28 +49,21 @@ class Agent:
         state = torch.from_numpy(np_state)
         action_probs, state_value = self.network(state)
 
+        action_dist = Categorical(action_probs)
+        action = action_dist.sample().item()
+        if not env.is_valid_action(action, player):
+            _, indices = torch.sort(action_probs.detach(), descending=True)
+            for index in indices:
+                if env.is_valid_action(index, player):
+                    action = index.item()
+                    break
         if is_train:
-            action_dist = Categorical(action_probs)
-            action = action_dist.sample().item()
-            if not env.is_valid_action(action, player):
-                _, indices = torch.sort(action_probs.detach(), descending=True)
-                for index in indices:
-                    if env.is_valid_action(index, player):
-                        action = index.item()
-                        break
-
             action_log_prob = action_dist.log_prob(torch.as_tensor(action)).item()
             self.state_memory.append(state.unsqueeze(dim=0))
             self.action_memory.append(action)
             self.state_value_memory.append(state_value.item())
             self.action_log_prob_memory.append(action_log_prob)
-            return int(action)
-        else:
-            _, indices = torch.sort(action_probs.detach(), descending=True)
-            for index in indices:
-                if env.is_valid_action(index, player):
-                    return index
-            return env.sample_valid_action(player)
+        return int(action)
 
     def store_reward(self, reward: float) -> None:
         self.reward_memory.append(reward)
