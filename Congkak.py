@@ -30,7 +30,7 @@ class Congkak:
                 self.board[n] = 0
             balls2 = 0
             if not end2:
-                balls2 += self.board[m]
+                balls2 = self.board[m]
                 self.board[m] = 0
             while balls1 + balls2 > 0:
                 if balls1 > 0:
