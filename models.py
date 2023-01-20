@@ -56,17 +56,19 @@ class ActorCriticNetwork(nn.Module):
         super(ActorCriticNetwork, self).__init__()
         self.shared_layers = nn.Sequential(
             nn.Linear(input_size, 128),
-            nn.ReLU(),
+            nn.Tanh(),
             nn.Linear(128, 128),
-            nn.ReLU())
+            nn.Tanh(),
+            nn.Linear(128, 128),
+            nn.Tanh())
         self.policy_layers = nn.Sequential(
             nn.Linear(128, 128),
-            nn.ReLU(),
+            nn.Tanh(),
             nn.Linear(128, output_size),
             nn.Softmax(dim=-1))
         self.value_layers = nn.Sequential(
             nn.Linear(128, 128),
-            nn.ReLU(),
+            nn.Tanh(),
             nn.Linear(128, 1))
 
     def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:

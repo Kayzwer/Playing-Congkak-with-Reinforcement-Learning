@@ -10,25 +10,25 @@ if __name__ == "__main__":
         output_size=7,
         policy_lr=3e-4,
         value_lr=1e-3,
-        gamma=0.99,
+        gamma=0.85,
         lambda_=0.95,
         epsilon=0.2,
         target_kl_div=0.05,
-        entropy_weight=0.1,
-        max_policy_train_iters=128,
-        value_train_iters=128)
+        entropy_weight=0.25,
+        max_policy_train_iters=32,
+        value_train_iters=32)
     agent2 = Agent(
         input_size=16,
         output_size=7,
         policy_lr=3e-4,
         value_lr=1e-3,
-        gamma=0.99,
+        gamma=0.85,
         lambda_=0.95,
         epsilon=0.2,
         target_kl_div=0.05,
-        entropy_weight=0.1,
-        max_policy_train_iters=128,
-        value_train_iters=128)
+        entropy_weight=0.25,
+        max_policy_train_iters=32,
+        value_train_iters=32)
     agent1.network.train()
     agent2.network.train()
 
@@ -60,7 +60,7 @@ if __name__ == "__main__":
                 score_2 += reward
         policy_loss_1, value_loss_1 = agent1.update()
         policy_loss_2, value_loss_2 = agent2.update()
-        if (e + 1) % 100000 == 0:
+        if (e + 1) % 1000 == 0:
             print(f"Episode: {e + 1}, Player 1 score: {score_1}, Player 2 scor"
                   f"e: {score_2}")
             print(f"Player 1, Policy Loss: {policy_loss_1:.6f}, Value Loss: "
